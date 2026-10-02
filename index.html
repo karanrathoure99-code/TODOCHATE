@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Web Clone</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            wa: {
+              teal: '#075E54',
+              tealLight: '#128C7E',
+              green: '#25D366',
+              bgChat: '#efeae2',
+              bgChatDark: '#0b141a',
+              outgoingBubble: '#d9fdd3',
+              outgoingBubbleDark: '#005c4b',
+              incomingBubble: '#ffffff',
+              incomingBubbleDark: '#202c33',
+              sidebarLight: '#ffffff',
+              sidebarDark: '#111b21',
+              headerLight: '#f0f2f5',
+              headerDark: '#202c33',
+              inputLight: '#ffffff',
+              inputDark: '#2a3942',
+              borderLight: '#e9edef',
+              borderDark: '#222d34'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* WhatsApp Background Doodle Pattern */
+    .chat-bg {
+      background-color: #efeae2;
+      background-image: radial-gradient(#d1d7db 0.8px, transparent 0.8px), radial-gradient(#d1d7db 0.8px, #efeae2 0.8px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+    .dark .chat-bg {
+      background-color: #0b141a;
+      background-image: radial-gradient(#1e2b32 0.8px, transparent 0.8px), radial-gradient(#1e2b32 0.8px, #0b141a 0.8px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #374151;
+    }
+    .pulse-ring {
+      animation: pulse-border 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-border {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 25px rgba(37, 211, 102, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex items-center justify-center min-h-screen p-0 md:p-4 select-none font-sans overflow-hidden">
+
+  <!-- Main Container -->
+  <div class="w-full h-screen md:h-[94vh] md:max-w-[1550px] bg-white dark:bg-wa-sidebarDark rounded-none md:rounded-2xl shadow-2xl flex overflow-hidden border border-gray-300 dark:border-wa-borderDark">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside id="sidebar" class="w-full md:w-[380px] lg:w-[420px] flex-shrink-0 flex flex-col border-r border-wa-borderLight dark:border-wa-borderDark bg-wa-sidebarLight dark:bg-wa-sidebarDark z-10">
+      <!-- Sidebar Header -->
+      <div class="h-16 px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between border-b border-wa-borderLight dark:border-wa-borderDark">
+        <div class="flex items-center gap-3">
+          <div class="relative cursor-pointer">
+            <img id="userProfilePic" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="My Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm">
+            <span class="w-3 h-3 bg-wa-green rounded-full absolute bottom-0 right-0 border-2 border-white dark:border-gray-800"></span>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold tracking-tight text-gray-800 dark:text-gray-100 leading-tight">Aap (You)</h2>
+            <p class="text-xs text-wa-tealLight font-medium">Online</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+          <button id="themeToggleBtn" title="Toggle Theme" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition">
+            <svg id="themeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          </button>
+          <button title="Status / Stories" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2" stroke-dasharray="4 2"></circle></svg>
+          </button>
+          <button title="New Chat" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="p-3 bg-white dark:bg-wa-sidebarDark border-b border-wa-borderLight dark:border-wa-borderDark">
+        <div class="relative flex items-center bg-wa-headerLight dark:bg-wa-inputDark rounded-lg px-3 py-1.5 focus-within:ring-2 focus-within:ring-wa-tealLight transition">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="searchInput" placeholder="Search or start new chat..." class="w-full bg-transparent text-sm focus:outline-none placeholder-gray-500 dark:placeholder-gray-400 text-gray-800 dark:text-gray-100">
+        </div>
+      </div>
+
+      <!-- Chat List -->
+      <div id="chatList" class="flex-1 overflow-y-auto divide-y divide-gray-100 dark:divide-wa-borderDark">
+        <!-- Chat items rendered dynamically via JavaScript -->
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CHAT AREA -->
+    <main id="mainChatArea" class="flex-1 flex flex-col h-full bg-wa-bgChat dark:bg-wa-bgChatDark relative">
+      
+      <!-- Chat Header -->
+      <div id="chatHeader" class="h-16 px-4 bg-wa-headerLight dark:bg-wa-headerDark border-b border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between z-10 shadow-sm">
+        <div class="flex items-center gap-3">
+          <button id="backToSidebarBtn" class="md:hidden p-1.5 mr-1 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          
+          <div class="relative cursor-pointer" onclick="startCall('video')">
+            <img id="activeContactAvatar" src="" alt="Contact" class="w-10 h-10 rounded-full object-cover shadow-sm">
+            <span id="activeOnlineBadge" class="w-3 h-3 bg-wa-green rounded-full absolute bottom-0 right-0 border-2 border-white dark:border-gray-800"></span>
+          </div>
+
+          <div>
+            <h3 id="activeContactName" class="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-tight"></h3>
+            <p id="activeContactStatus" class="text-xs text-wa-tealLight font-medium">online</p>
+          </div>
+        </div>
+
+        <!-- Call and Actions Buttons -->
+        <div class="flex items-center gap-2">
+          <!-- Audio Call Button -->
+          <button onclick="startCall('audio')" title="Voice Call" class="p-2.5 text-gray-600 dark:text-gray-300 hover:text-wa-teal hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-full transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z"></path></svg>
+          </button>
+
+          <!-- Video Call Button -->
+          <button onclick="startCall('video')" title="Video Call" class="p-2.5 text-gray-600 dark:text-gray-300 hover:text-wa-teal hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-full transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"></path></svg>
+          </button>
+
+          <span class="w-[1px] h-6 bg-gray-300 dark:bg-gray-700 mx-1"></span>
+
+          <!-- Search in chat -->
+          <button title="Search messages" class="p-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition hidden sm:block">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </button>
+
+          <!-- More Options -->
+          <button id="menuButton" title="More options" class="p-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Thread -->
+      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 chat-bg">
+        <!-- Dynamic message bubbles will appear here -->
+      </div>
+
+      <!-- Typing Indicator banner -->
+      <div id="typingIndicator" class="hidden px-6 py-1 bg-white/70 dark:bg-wa-sidebarDark/80 backdrop-blur text-xs text-wa-tealLight font-medium flex items-center gap-1.5 transition">
+        <span class="w-1.5 h-1.5 bg-wa-tealLight rounded-full animate-bounce"></span>
+        <span class="w-1.5 h-1.5 bg-wa-tealLight rounded-full animate-bounce [animation-delay:0.2s]"></span>
+        <span class="w-1.5 h-1.5 bg-wa-tealLight rounded-full animate-bounce [animation-delay:0.4s]"></span>
+        <span id="typingText" class="ml-1">typing...</span>
+      </div>
+
+      <!-- Chat Bottom Input Bar -->
+      <div class="min-h-16 px-3 sm:px-4 py-2 bg-wa-headerLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex items-center gap-2 z-10">
+        <!-- Emoji button -->
+        <button id="emojiBtn" class="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-full transition" title="Insert Emoji">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </button>
+
+        <!-- Attachment button -->
+        <button id="attachBtn" class="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-full transition" title="Attach file or photo">
+          <svg class="w-6 h-6 rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+        </button>
+
+        <!-- Message Input box -->
+        <div class="flex-1 bg-white dark:bg-wa-inputDark rounded-xl px-4 py-2 flex items-center shadow-inner border border-gray-200 dark:border-transparent">
+          <input type="text" id="messageInput" autocomplete="off" placeholder="Type a message..." class="w-full bg-transparent text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none">
+        </div>
+
+        <!-- Send / Voice Record Button -->
+        <button id="sendBtn" class="p-2.5 bg-wa-teal hover:bg-wa-tealLight text-white rounded-full transition shadow-md flex items-center justify-center flex-shrink-0">
+          <svg id="sendIcon" class="w-5 h-5 rotate-90 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+        </button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- CALLING MODAL / OVERLAY (AUDIO & VIDEO) -->
+  <div id="callModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden flex-col items-center justify-between p-6 sm:p-10 z-50 transition-all duration-300">
+    
+    <!-- Top status bar -->
+    <div class="w-full flex items-center justify-between text-white max-w-2xl">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+        <span id="callTypeBadge" class="text-xs uppercase tracking-wider font-bold bg-white/20 px-2 py-0.5 rounded">WhatsApp Video Call</span>
+      </div>
+      <div id="callTimer" class="text-sm font-mono text-gray-300 tracking-wider">Ringing...</div>
+    </div>
+
+    <!-- Center Call Stage -->
+    <div class="relative w-full max-w-2xl h-[55vh] flex items-center justify-center rounded-3xl overflow-hidden bg-gray-950 border border-gray-800 shadow-2xl">
+      
+      <!-- Video Element / Placeholder -->
+      <div id="videoContainer" class="w-full h-full relative flex items-center justify-center">
+        <!-- Caller Video Simulator (Unsplash Video Loop placeholder) -->
+        <img id="callAvatarLarge" src="" alt="Contact Video" class="w-full h-full object-cover filter brightness-90">
+        
+        <!-- Audio-only wave animation -->
+        <div id="audioWaveContainer" class="hidden absolute inset-0 bg-slate-900 flex-col items-center justify-center gap-4">
+          <div class="relative">
+            <img id="audioAvatar" src="" class="w-28 h-28 rounded-full border-4 border-wa-green shadow-xl pulse-ring">
+          </div>
+          <p id="audioCallName" class="text-xl font-semibold text-white mt-4"></p>
+          <p class="text-sm text-wa-tealLight font-mono">End-to-end encrypted</p>
+        </div>
+
+        <!-- Self Floating Cam PiP -->
+        <div id="selfPipCam" class="absolute bottom-4 right-4 w-28 h-40 sm:w-36 sm:h-48 bg-gray-800 rounded-2xl overflow-hidden border-2 border-white/60 shadow-2xl flex items-center justify-center">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Self Cam" class="w-full h-full object-cover">
+          <span class="absolute bottom-1 right-2 text-[10px] text-white bg-black/60 px-1 rounded">You</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Action Controls -->
+    <div class="flex items-center gap-4 sm:gap-6 bg-white/10 px-6 sm:px-8 py-3.5 rounded-full backdrop-blur-lg border border-white/10 shadow-xl">
+      
+      <!-- Mute Mic -->
+      <button id="toggleMicBtn" onclick="toggleMic()" title="Mute Microphone" class="p-3.5 bg-gray-700/80 hover:bg-gray-600 text-white rounded-full transition shadow-md">
+        <svg id="micIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+      </button>
+
+      <!-- Toggle Video (Cam) -->
+      <button id="toggleCamBtn" onclick="toggleCam()" title="Disable Camera" class="p-3.5 bg-gray-700/80 hover:bg-gray-600 text-white rounded-full transition shadow-md">
+        <svg id="camIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
+      </button>
+
+      <!-- Switch / Flip Camera -->
+      <button onclick="flipCameraMock()" title="Flip Camera" class="p-3.5 bg-gray-700/80 hover:bg-gray-600 text-white rounded-full transition shadow-md">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+      </button>
+
+      <!-- End Call Button -->
+      <button onclick="endCall()" title="End Call" class="p-3.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition shadow-lg transform hover:scale-105">
+        <svg class="w-6 h-6 rotate-[135deg]" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Notification Toast message -->
+  <div id="toast" class="fixed top-6 right-6 bg-gray-900 text-white px-4 py-2.5 rounded-lg shadow-2xl flex items-center gap-2 transform translate-y-[-150%] transition-transform duration-300 z-50 border border-gray-700">
+    <span class="text-wa-green font-bold">✓</span>
+    <span id="toastMsg" class="text-sm">Action successful</span>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // Mock user contacts database
+    const contacts = [
+      {
+        id: 1,
+        name: 'Rahul Sharma',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+        online: true,
+        typing: false,
+        unread: 1,
+        lastSeen: 'online',
+        messages: [
+          { sender: 'them', text: 'Bhai WhatsApp clone kaisa chal raha hai?', time: '11:40 AM' },
+          { sender: 'me', text: 'Bohot mast! Chat aur call dono features ready hain.', time: '11:42 AM' },
+          { sender: 'them', text: 'Arrey wah! Mujhe call karke dikha na ek baar video call.', time: '11:43 AM' }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Priya Singh',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+        online: true,
+        typing: false,
+        unread: 0,
+        lastSeen: 'online',
+        messages: [
+          { sender: 'them', text: 'Project presentation kab submit karni hai?', time: '09:15 AM' },
+          { sender: 'me', text: 'Shaam 5 baje se pehle.', time: '09:20 AM' },
+          { sender: 'them', text: 'Theek hai, main slides complete kar leti hu.', time: '09:22 AM' }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Aman Patel',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+        online: false,
+        typing: false,
+        unread: 0,
+        lastSeen: 'yesterday at 9:15 PM',
+        messages: [
+          { sender: 'them', text: 'Bhai shaam ko cricket khelne chalein?', time: 'Yesterday' },
+          { sender: 'me', text: 'Haan ground par 5:30 milte hain.', time: 'Yesterday' }
+        ]
+      },
+      {
+        id: 4,
+        name: 'Tech Community Group 💻',
+        avatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=80',
+        online: true,
+        typing: false,
+        unread: 4,
+        lastSeen: '12 participants',
+        messages: [
+          { sender: 'them', text: 'Has anyone integrated WebSockets with Node.js?', time: '10:05 AM' },
+          { sender: 'me', text: 'Yes, Socket.io works smoothly with WebRTC signaling!', time: '10:12 AM' }
+        ]
+      }
+    ];
+
+    let activeContactId = 1;
+    let callTimerInterval = null;
+    let callSeconds = 0;
+    let isMicMuted = false;
+    let isCamOff = false;
+
+    // DOM Elements
+    const chatListEl = document.getElementById('chatList');
+    const messagesContainer = document.getElementById('messagesContainer');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const searchInput = document.getElementById('searchInput');
+    const activeContactName = document.getElementById('activeContactName');
+    const activeContactStatus = document.getElementById('activeContactStatus');
+    const activeContactAvatar = document.getElementById('activeContactAvatar');
+    const activeOnlineBadge = document.getElementById('activeOnlineBadge');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const typingText = document.getElementById('typingText');
+    const callModal = document.getElementById('callModal');
+    const callTimer = document.getElementById('callTimer');
+    const callTypeBadge = document.getElementById('callTypeBadge');
+    const callAvatarLarge = document.getElementById('callAvatarLarge');
+    const audioWaveContainer = document.getElementById('audioWaveContainer');
+    const audioAvatar = document.getElementById('audioAvatar');
+    const audioCallName = document.getElementById('audioCallName');
+    const selfPipCam = document.getElementById('selfPipCam');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sidebar = document.getElementById('sidebar');
+    const mainChatArea = document.getElementById('mainChatArea');
+    const backToSidebarBtn = document.getElementById('backToSidebarBtn');
+
+    function renderContactList(filteredList = contacts) {
+      chatListEl.innerHTML = '';
+      filteredList.forEach(contact => {
+        const lastMsg = contact.messages[contact.messages.length - 1];
+        const isActive = contact.id === activeContactId;
+
+        const item = document.createElement('div');
+        item.className = `flex items-center gap-3.5 p-3.5 cursor-pointer transition select-none ${
+          isActive 
+            ? 'bg-[#f0f2f5] dark:bg-wa-inputDark border-l-4 border-wa-teal' 
+            : 'hover:bg-gray-50 dark:hover:bg-[#1a2730]'
+        }`;
+        item.onclick = () => selectContact(contact.id);
+
+        item.innerHTML = `
+          <div class="relative flex-shrink-0">
+            <img src="${contact.avatar}" alt="${contact.name}" class="w-12 h-12 rounded-full object-cover shadow-sm">
+            ${contact.online ? '<span class="w-3.5 h-3.5 bg-wa-green rounded-full absolute bottom-0 right-0 border-2 border-white dark:border-gray-800"></span>' : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-baseline mb-0.5">
+              <h4 class="text-sm font-semibold truncate text-gray-800 dark:text-gray-100">${contact.name}</h4>
+              <span class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">${lastMsg ? lastMsg.time : ''}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
+                ${contact.typing ? '<span class="text-wa-green font-semibold">typing...</span>' : (lastMsg ? lastMsg.text : '')}
+              </p>
+              ${contact.unread > 0 ? `
+                <span class="w-5 h-5 flex items-center justify-center bg-wa-green text-white text-[11px] font-bold rounded-full flex-shrink-0 shadow-sm animate-pulse">
+                  ${contact.unread}
+                </span>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        chatListEl.appendChild(item);
+      });
+    }
+
+    function selectContact(id) {
+      activeContactId = id;
+      const contact = contacts.find(c => c.id === id);
+      if (!contact) return;
+
+      // Mark unread as 0
+      contact.unread = 0;
+
+      // Update Header info
+      activeContactName.textContent = contact.name;
+      activeContactAvatar.src = contact.avatar;
+      activeContactStatus.textContent = contact.online ? 'online' : `last seen ${contact.lastSeen}`;
+      if (contact.online) {
+        activeOnlineBadge.classList.remove('hidden');
+      } else {
+        activeOnlineBadge.classList.add('hidden');
+      }
+
+      // Responsive mobile view toggle
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('hidden');
+        mainChatArea.classList.remove('hidden');
+      }
+
+      renderContactList();
+      renderMessages();
+      scrollToBottom();
+    }
+
+    function renderMessages() {
+      const contact = contacts.find(c => c.id === activeContactId);
+      if (!contact) return;
+
+      messagesContainer.innerHTML = `
+        <div class="flex justify-center my-3">
+          <span class="text-[11px] bg-white/80 dark:bg-wa-inputDark text-gray-500 dark:text-gray-400 px-3 py-1 rounded-md shadow-sm font-medium">
+            🔒 Messages and calls are end-to-end encrypted. No one outside of this chat can read or listen to them.
+          </span>
+        </div>
+      `;
+
+      contact.messages.forEach(msg => {
+        const isMe = msg.sender === 'me';
+        const bubble = document.createElement('div');
+        bubble.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'}`;
+
+        bubble.innerHTML = `
+          <div class="relative max-w-[80%] sm:max-w-[65%] rounded-lg px-3 py-1.5 shadow-sm text-sm break-words ${
+            isMe 
+              ? 'bg-wa-outgoingBubble dark:bg-wa-outgoingBubbleDark text-gray-900 dark:text-gray-100 rounded-tr-none' 
+              : 'bg-wa-incomingBubble dark:bg-wa-incomingBubbleDark text-gray-900 dark:text-gray-100 rounded-tl-none'
+          }">
+            <div class="leading-relaxed pr-14 select-text">${escapeHtml(msg.text)}</div>
+            <div class="absolute bottom-1 right-2 flex items-center gap-1">
+              <span class="text-[10px] text-gray-500 dark:text-gray-400">${msg.time}</span>
+              ${isMe ? `
+                <svg class="w-3.5 h-3.5 text-sky-500" viewBox="0 0 16 15" fill="none">
+                  <path d="M15.01 3.316l-7.79 7.79a1 1 0 01-1.42 0L2.5 7.806a1 1 0 111.42-1.42l2.59 2.59 7.08-7.08a1 1 0 011.42 1.42z" fill="currentColor"/>
+                  <path d="M11.51 3.316l-7.79 7.79a1 1 0 01-1.42 0L-.99 8.816a1 1 0 111.42-1.42l1.58 1.58 7.08-7.08a1 1 0 011.42 1.42z" fill="currentColor"/>
+                </svg>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        messagesContainer.appendChild(bubble);
+      });
+    }
+
+    function scrollToBottom() {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function handleSendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      const contact = contacts.find(c => c.id === activeContactId);
+      if (!contact) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // Add our message
+      contact.messages.push({
+        sender: 'me',
+        text: text,
+        time: timeStr
+      });
+
+      messageInput.value = '';
+      renderMessages();
+      renderContactList();
+      scrollToBottom();
+
+      // Trigger automatic simulation reply after 1.2s
+      simulateReply(contact);
+    }
+
+    function simulateReply(contact) {
+      setTimeout(() => {
+        contact.typing = true;
+        typingIndicator.classList.remove('hidden');
+        typingText.textContent = `${contact.name} is typing...`;
+        renderContactList();
+
+        setTimeout(() => {
+          contact.typing = false;
+          typingIndicator.classList.add('hidden');
+
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+          const autoReplies = [
+            "Bilkul! Main bhi yahi bolne wala tha 👍",
+            "Haan bhai samajh gaya, shaam ko baat karte hain.",
+            "Video call karke dekho, UI mast responsive lag raha hai!",
+            "Got it! Let's connect soon.",
+            "Awesome work on this WhatsApp clone 🔥"
+          ];
+          const randomReply = autoReplies[Math.floor(Math.random() * autoReplies.length)];
+
+          contact.messages.push({
+            sender: 'them',
+            text: randomReply,
+            time: timeStr
+          });
+
+          renderMessages();
+          renderContactList();
+          scrollToBottom();
+          showToast(`New message from ${contact.name}`);
+        }, 1500);
+      }, 700);
+    }
+
+    function startCall(type) {
+      const contact = contacts.find(c => c.id === activeContactId);
+      if (!contact) return;
+
+      callModal.classList.remove('hidden');
+      callModal.classList.add('flex');
+
+      callTypeBadge.textContent = type === 'video' ? 'WhatsApp Video Call' : 'WhatsApp Voice Call';
+      callAvatarLarge.src = contact.avatar;
+      audioAvatar.src = contact.avatar;
+      audioCallName.textContent = contact.name;
+
+      if (type === 'audio') {
+        audioWaveContainer.classList.remove('hidden');
+        selfPipCam.classList.add('hidden');
+      } else {
+        audioWaveContainer.classList.add('hidden');
+        selfPipCam.classList.remove('hidden');
+      }
+
+      callTimer.textContent = 'Ringing...';
+      callSeconds = 0;
+
+      // Simulate connected call after 2 seconds
+      setTimeout(() => {
+        if (callModal.classList.contains('flex')) {
+          startCallTimer();
+        }
+      }, 2000);
+    }
+
+    function startCallTimer() {
+      clearInterval(callTimerInterval);
+      callTimerInterval = setInterval(() => {
+        callSeconds++;
+        const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+        const secs = String(callSeconds % 60).padStart(2, '0');
+        callTimer.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function endCall() {
+      clearInterval(callTimerInterval);
+      callModal.classList.add('hidden');
+      callModal.classList.remove('flex');
+      showToast('Call Ended');
+    }
+
+    function toggleMic() {
+      isMicMuted = !isMicMuted;
+      const btn = document.getElementById('toggleMicBtn');
+      if (isMicMuted) {
+        btn.classList.add('bg-red-600');
+        btn.classList.remove('bg-gray-700/80');
+        showToast('Microphone Muted');
+      } else {
+        btn.classList.remove('bg-red-600');
+        btn.classList.add('bg-gray-700/80');
+        showToast('Microphone Unmuted');
+      }
+    }
+
+    function toggleCam() {
+      isCamOff = !isCamOff;
+      const btn = document.getElementById('toggleCamBtn');
+      if (isCamOff) {
+        btn.classList.add('bg-red-600');
+        btn.classList.remove('bg-gray-700/80');
+        selfPipCam.classList.add('opacity-10');
+        showToast('Camera Turned Off');
+      } else {
+        btn.classList.remove('bg-red-600');
+        btn.classList.add('bg-gray-700/80');
+        selfPipCam.classList.remove('opacity-10');
+        showToast('Camera Turned On');
+      }
+    }
+
+    function flipCameraMock() {
+      selfPipCam.classList.toggle('scale-x-[-1]');
+      showToast('Camera flipped');
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = text;
+      toast.classList.remove('translate-y-[-150%]');
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-150%]');
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    // Event Listeners
+    sendBtn.addEventListener('click', handleSendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSendMessage();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filtered = contacts.filter(c => c.name.toLowerCase().includes(query));
+      renderContactList(filtered);
+    });
+
+    // Theme Switcher (Dark / Light mode)
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
+    });
+
+    // Mobile back button
+    backToSidebarBtn.addEventListener('click', () => {
+      sidebar.classList.remove('hidden');
+      mainChatArea.classList.add('hidden');
+    });
+
+    // Quick emoji click mock
+    document.getElementById('emojiBtn').addEventListener('click', () => {
+      const emojis = ['😊', '👍', '🔥', '🚀', '❤️', '🎉'];
+      const pick = emojis[Math.floor(Math.random() * emojis.length)];
+      messageInput.value += pick;
+      messageInput.focus();
+    });
+
+    // Attach button mock
+    document.getElementById('attachBtn').addEventListener('click', () => {
+      showToast('Attachment menu: Photos, Docs & Camera opened');
+    });
+
+    // Initialize Default view
+    selectContact(1);
+
+    // Initial check for mobile view
+    if (window.innerWidth < 768) {
+      mainChatArea.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
