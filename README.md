@@ -1,42 +1,24 @@
-# 📱 TODOCHATE (Chat & Call App)
+# 🤪 Z PAJAL
 
-Ek fast, secure aur modern real-time communication platform jisme users text chat ke saath-saath high-quality voice aur video calls kar sakte hain.
+Duniya ka sabse "aasan" aur "relaxing" game. Agar aapka din bahut accha ja raha hai aur aap usko barbaad karna chahte hain, toh **Z PAGAL** aapke liye hi bana hai! Yeh game aapka dimaag kharab karne ki 100% guarantee leta hai.
 
----
+🎮 **[Click Here to Play "Z PAGAL"!](https://karanrathoure99-code.github.io/TODOCHATE/)/)** 
 
-## ✨ Features
+## 🕹️ Kaise Khelein? (How to Play)
+- **Blue box** ko **Green box** tak le kar jana hai. 
+- Bas Arrow Keys (⬆️ ⬇️ ⬅️ ➡️) ka use karein. (Lekin controls mein ek chhota sa "twist" hai 😉).
+- Screen ke border ko touch mat karna, warna game aapki beizzati karke restart ho jayega.
 
-- **Instant Chat:** Real-time 1-on-1 aur group messaging.
-- **Voice & Video Calling:** Lag-free peer-to-peer audio aur video calls.
-- **Media Sharing:** Photos, videos, voice notes aur documents share karne ki suvidha.
-- **Online & Typing Indicator:** Live status dikhana jab koi online ho ya message type kar raha ho.
-- **Message Receipts:** Sent, Delivered, aur Seen (read ticks) indicators.
-- **User Authentication:** Secure mobile OTP ya email login.
+## ✨ Features (Dimaag Kharab Karne Ke Tareeqe)
+- **Reverse Psychology:** Controls bilkul waise kaam nahi karte jaisa aap sochte hain. Left jaane ke liye right dabana padega!
+- **Zero Mercy:** Thodi si galti aur seedha Game Over.
+- **Emotional Damage:** Haarne par game aapko motivate nahi karega, balki seedha taane (taunts) maarega.
+- **Infinite Frustration:** Level complete karne par aapko lagega aap jeet gaye, par asli troll tabhi shuru hoga.
 
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** React Native / Flutter (Mobile App)
-- **Backend:** Node.js (Express.js)
-- **Real-Time Messaging:** Socket.io / WebSockets
-- **Audio/Video Calls:** WebRTC / Agora SDK
-- **Database:** MongoDB / PostgreSQL
-- **Cloud Media Storage:** Cloudinary / Firebase Storage
+## 🛠️ Tech Stack
+- HTML5
+- CSS3
+- Vanilla JavaScript (Doston ko pareshan karne ki ninja technique)
 
 ---
-
-## 🚀 Quick Setup & Installation
-
-### Prerequisites
-
-- Node.js (v18 ya usse upar)
-- Git
-- npm ya yarn
-
-### Steps to Run
-
-1. **Repository Clone Karein:**
-   ```bash
-   git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-   cd your-repo-name
+**⚠️ WARNING:** Is game ko khelne ke baad toote hue Keyboard, Mouse, Mobile screen ya dosti tootne ki zimmedari developer ki nahi hogi. Khelna hai toh apne risk par khelein! 😈
